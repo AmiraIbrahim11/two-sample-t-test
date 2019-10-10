@@ -1,0 +1,44 @@
+---
+title: "t test"
+author: "Amira Ibrahim"
+date: "October 11, 2019"
+output: html_document
+runtime: shiny
+---
+
+```{r HW6, echo=TRUE}
+HW6 <- read.csv(file.choose(),header=T)
+attach(HW6)
+View(HW6) 
+```
+
+## Normality test :  
+```{r , echo=TRUE}
+library(moments) 
+skewness(heamoglobin) 
+#accepted range from -1 to +1 
+kurtosis(heamoglobin) 
+#accepted range from -2 to +2 may to +3
+boxplot(heamoglobin ~ Drug , xlab = "Drug" , ylab = "Hb" , main = "Comparison of Drugs & Hb") 
+#visually , data is normally distributed
+shapiro.test(heamoglobin) 
+## P-value > 0.05 , So data in normally distributed 
+```
+## calculate ( mean , variance) : 
+```{r , echo=TRUE}
+DrugA_mean <- mean(heamoglobin[Drug=="A"]) 
+DrugB_mean <- mean(heamoglobin[Drug=="B"]) 
+DrugA_mean 
+DrugB_mean 
+DrugA_var <- var(heamoglobin[Drug=="A"]) 
+DrugB_var <- var(heamoglobin[Drug=="B"]) 
+DrugA_var 
+DrugB_var 
+
+### When we compare Variance of drug A , B >>> so we assume that var.eq = True 
+```
+### the sample contain 2 Drugs so we used independent sample t-test :
+```{r , echo=TRUE}
+t.test(heamoglobin ~ Drug , mu = 0 , alternative = "two.sided" , conf.level = 0.95 , var.eq = T , paired = F)
+#p-value < 0.05, So there is significant difference >>> reject Null Hypothesis
+```
